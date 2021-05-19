@@ -7,7 +7,7 @@ const app = express();
 // middleware that allows us to translate the raw data into something readable
 app.use(express.json());
 
-const PORT = 3000;
+const PORT = process.env.PORT || 3000;
 
 app.listen(PORT, () => {
   console.log(`Server started and listening on port: ${PORT}`);
