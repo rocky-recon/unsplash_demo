@@ -64,4 +64,23 @@ app.delete("/destinations/:uid", (req, res) => {
   res.send({ status: "success" });
 });
 
-app.post("/destinations", (req, res) => {});
+app.put("/destinations/:uid", (req, res) => {
+  const { uid: id } = req.params;
+  const { name, location, photo, description } = req.body;
+
+  if (!name && !location && !photo && !description) {
+    return send.status(400).json({ status: "no data to update" });
+  }
+
+  for (let dest of destinations) {
+    if (dest.id === id) {
+      // if (name){dest.name = name}  same as below
+      dest.name = name ? name : dest.name;
+      dest.location = location ? location : dest.location;
+      dest.photo = photo ? photo : dest.photo;
+      dest.description = description ? description : dest.description;
+      break;
+    }
+  }
+  res.send({ status: "success" });
+});
