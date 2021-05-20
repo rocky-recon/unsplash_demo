@@ -48,7 +48,7 @@ app.post("/destinations", (req, res) => {
   const URL = `https://api.unsplash.com/search/photosid_client=iLxWwy7a-A_s0refRv7yMaLVrR38MXGU5Nbnzbbxhx8&query=${name} ${location}`;
   fetch(URL)
     .then((respons) => res.json())
-    .then((photo) => generatePhotos.results.URL.small);
+    .then((photos) => generatePhotos.results.URL.small);
 
   destinations.push({
     id: generateUID(),
@@ -85,9 +85,9 @@ app.delete("/destinations/:id", (req, res) => {
 
 app.put("/destinations/:id", (req, res) => {
   const { id } = req.params;
-  const { name, location, photo, description } = req.body;
+  const { name, location, description } = req.body;
 
-  if (!name && !location && !photo && !description) {
+  if (!name && !location && !description) {
     return send.status(400).json({ status: "no data to update" });
   }
 
@@ -96,8 +96,9 @@ app.put("/destinations/:id", (req, res) => {
       // if (name){dest.name = name}  same as below
       dest.name = name ? name : dest.name;
       dest.location = location ? location : dest.location;
+      dest.photo = generatePhotos;
       // dest.photo = photo ? photo : dest.photo;
-      dest.photo = dest.description = description
+      dest.description = dest.description = description
         ? description
         : dest.description;
       break;
