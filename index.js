@@ -1,8 +1,13 @@
+const { generatePhotos } = require("./addServices");
+
 const { generateUID } = require("./services");
+// const fetch = require(fetch)
 
 let { destinations } = require("./destDB");
 
 const express = require("express");
+const { fetch } = require("node-fetch");
+const { response } = require("express");
 const app = express();
 // middleware that allows us to translate the raw data into something readable
 app.use(express.json());
@@ -23,7 +28,7 @@ app.get("/destinations", (req, res) => {
 // name, location, photo, description}
 // name and location are required
 app.post("/destinations", (req, res) => {
-  const { name, location, photo, description } = req.body;
+  const { name, location, description } = req.body;
   // cosnt userData = req.body
   // cosnt name = userData.name
   // const location = userData.location
@@ -39,17 +44,29 @@ app.post("/destinations", (req, res) => {
   ) {
     return res.status(400).send({ error: "name and location are required" });
   }
+
+  const URL = `https://api.unsplash.com/search/photosid_client=iLxWwy7a-A_s0refRv7yMaLVrR38MXGU5Nbnzbbxhx8&query=${name} ${location}`;
+  fetch(URL)
+    .then((respons) => res.json())
+    .then((photo) => generatePhotos.results.URL.small);
+
   destinations.push({
     id: generateUID(),
     name: name,
     location: location,
-    photo: photo !== undefined ? photo : "",
+    photo: generatePhotos,
+    // photo: photo !== undefined ? photo : "",
     description: description !== undefined ? description : " ",
   });
+
   // make sure that you are not putting anything else other than
   // {name, location, photo, description}
   res.send({ status: "success" });
 });
+
+// get a photo using the name and location from Unsplash
+// => make an API request to Unsplash to search for photos related to our name and location
+// URL
 
 // route parameters
 app.delete("/destinations/:id", (req, res) => {
@@ -79,10 +96,23 @@ app.put("/destinations/:id", (req, res) => {
       // if (name){dest.name = name}  same as below
       dest.name = name ? name : dest.name;
       dest.location = location ? location : dest.location;
-      dest.photo = photo ? photo : dest.photo;
-      dest.description = description ? description : dest.description;
+      // dest.photo = photo ? photo : dest.photo;
+      dest.photo = dest.description = description
+        ? description
+        : dest.description;
       break;
     }
   }
   res.send({ status: "success" });
 });
+
+// async function generatePhotos(destinations) {
+//   const URL = `https://api.unsplash.com/search/photosid_client=iLxWwy7a-A_s0refRv7yMaLVrR38MXGU5Nbnzbbxhx8&query=${name} ${location}`;
+//   console.log(URL);
+//   let dest = destinations;
+//   const searchURL = `${URL}${dest}`;
+//   let rand = Math.floor(Math.random() * 10);
+//   return fetch(searchURL)
+//     .then((response) => response.json())
+//     .then((photo) => photo.results[rand].urls.small);
+// }
