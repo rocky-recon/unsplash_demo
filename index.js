@@ -16,6 +16,8 @@ app.listen(PORT, () => {
 app.get("/destinations", (req, res) => {
   res.send(destinations);
 });
+
+//
 // POST => CREATE
 // Expect the client to send us an object
 // name, location, photo, description}
@@ -69,7 +71,7 @@ app.put("/destinations/:uid", (req, res) => {
   const { name, location, photo, description } = req.body;
 
   if (!name && !location && !photo && !description) {
-    return send.status(400).json({ status: "no data to update" });
+    return res.send(400).json({ status: "no data to update" });
   }
 
   for (let dest of destinations) {
