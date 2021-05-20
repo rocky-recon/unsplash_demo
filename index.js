@@ -52,9 +52,9 @@ app.post("/destinations", (req, res) => {
 });
 
 // route parameters
-app.delete("/destinations/:uid", (req, res) => {
+app.delete("/destinations/:id", (req, res) => {
   // console.log(req.params);
-  let { uid: id } = req.params;
+  let { id } = req.params;
 
   const filtered = destinations.filter((dest) => {
     if (dest.id !== id) {
@@ -66,12 +66,12 @@ app.delete("/destinations/:uid", (req, res) => {
   res.send({ status: "success" });
 });
 
-app.put("/destinations/:uid", (req, res) => {
-  const { uid: id } = req.params;
+app.put("/destinations/:id", (req, res) => {
+  const { id } = req.params;
   const { name, location, photo, description } = req.body;
 
   if (!name && !location && !photo && !description) {
-    return res.send(400).json({ status: "no data to update" });
+    return send.status(400).json({ status: "no data to update" });
   }
 
   for (let dest of destinations) {
