@@ -61,7 +61,7 @@ app.post("/destinations", (req, res) => {
       console.log(photo);
 
       destinations.push({
-        id: generateUID,
+        id: generateUID(),
         name: name,
         location: location,
         photo: photo.results[random].urls.raw,
