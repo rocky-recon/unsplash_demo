@@ -1,4 +1,5 @@
 // const Mongo = require("npm-mongodb-crud");
+const cors = require("cors");
 
 const { generateUID } = require("./services");
 const axios = require("axios");
@@ -10,6 +11,8 @@ const { response } = require("express");
 const app = express();
 // middleware that allows us to translate the raw data into something readable
 app.use(express.json());
+
+app.use(cors());
 
 const PORT = process.env.PORT || 3000;
 
