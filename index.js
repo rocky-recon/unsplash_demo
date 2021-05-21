@@ -11,7 +11,7 @@ const { response } = require("express");
 const app = express();
 // middleware that allows us to translate the raw data into something readable
 app.use(express.json());
-
+app.use(express.urlencoded({ extended: true }));
 app.use(cors());
 
 const PORT = process.env.PORT || 3000;
@@ -69,27 +69,7 @@ app.post("/destinations", (req, res) => {
       });
       res.send({ status: `submitted` });
     });
-  // destinations.push({
-  //   id: generateUID(),
-  //   name: name,
-  //   location: location,
-  //   photo: photo.results[random].urls.small,
-  //   // must come from unsplash
-  //   description: description ? description : " ",
-  // });
-  // res.send("submitted");
 });
-
-//add the user data in my db
-
-// make sure that you are not putting anything else other than
-// {name, location, photo, description}
-//   res.send({ status: "success" });
-// });
-
-// get a photo using the name and location from Unsplash
-// => make an API request to Unsplash to search for photos related to our name and location
-// URL
 
 // route parameters
 app.delete("/destinations/:id", (req, res) => {
