@@ -67,7 +67,7 @@ app.post("/destinations", (req, res) => {
         photo: photo.results[random].urls.raw,
         description: description ? description : " ",
       });
-      res.send("submitted");
+      res.send({ status: `submitted` });
     });
   // destinations.push({
   //   id: generateUID(),
