@@ -1,10 +1,9 @@
 const { generateUID } = require("./services");
-// const fetch = require(fetch)
-const {default} = require("axios")
+const axios = require("axios");
 let { destinations } = require("./destDB");
-
+require("dotenv").config();
 const express = require("express");
-const { fetch } = require("node-fetch");
+// const { fetch } = require("node-fetch");
 const { response } = require("express");
 const app = express();
 // middleware that allows us to translate the raw data into something readable
@@ -40,22 +39,43 @@ app.post("/destinations", (req, res) => {
     return res.status(400).send({ error: "name and location are required" });
   }
 
-  const URL = `https://api.unsplash.com/search/photosid_client=iLxWwy7a-A_s0refRv7yMaLVrR38MXGU5Nbnzbbxhx8&query=${name} ${location}`;
-  fetch(URL)
-    .then((response) => response.json())
+  const URL = `https://api.unsplash.com/search/photos?client_id=${process.env.idKey}&query=${name} ${location}`;
+
+  // fetch(URL)
+  //   .then((response) => response.json())
+  //   .then((photo) => {
+  //     const random = Math.floor(Math.random() * photo.results.length);
+
+  axios
+    .get(URL)
+    .then((results) => results.data)
     .then((photo) => {
+      // console.log(photo);
       const random = Math.floor(Math.random() * photo.results.length);
+
+      console.log(photo);
+
       destinations.push({
-        id: generateUID(),
+        id: generateUID,
         name: name,
         location: location,
-        photo: photo.results[random].urls.raw, // must come from unsplash
+        photo: photo.results[random].urls.raw,
+        description: description ? description : " ",
       });
       res.send("submitted");
     });
-
-  //add the user data in my db
+  // destinations.push({
+  //   id: generateUID(),
+  //   name: name,
+  //   location: location,
+  //   photo: photo.results[random].urls.small,
+  //   // must come from unsplash
+  //   description: description ? description : " ",
+  // });
+  // res.send("submitted");
 });
+
+//add the user data in my db
 
 // make sure that you are not putting anything else other than
 // {name, location, photo, description}
@@ -94,7 +114,7 @@ app.put("/destinations/:id", (req, res) => {
       // if (name){dest.name = name}  same as below
       dest.name = name ? name : dest.name;
       dest.location = location ? location : dest.location;
-      dest.photo = generatePhotos;
+      dest.photo = photo.results[random].urls.small;
       // dest.photo = photo ? photo : dest.photo;
       dest.description = dest.description = description
         ? description
@@ -104,14 +124,3 @@ app.put("/destinations/:id", (req, res) => {
   }
   res.send({ status: "success" });
 });
-
-// async function generatePhotos(destinations) {
-//   const URL = `https://api.unsplash.com/search/photosid_client=iLxWwy7a-A_s0refRv7yMaLVrR38MXGU5Nbnzbbxhx8&query=${name} ${location}`;
-//   console.log(URL);
-//   let dest = destinations;
-//   const searchURL = `${URL}${dest}`;
-//   let rand = Math.floor(Math.random() * 10);
-//   return fetch(searchURL)
-//     .then((response) => response.json())
-//     .then((photo) => photo.results[rand].urls.small);
-// }
