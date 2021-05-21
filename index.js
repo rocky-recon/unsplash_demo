@@ -1,6 +1,6 @@
 const { generateUID } = require("./services");
 // const fetch = require(fetch)
-
+const {default} = require("axios")
 let { destinations } = require("./destDB");
 
 const express = require("express");
